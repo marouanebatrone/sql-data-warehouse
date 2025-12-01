@@ -1,5 +1,13 @@
 CREATE OR ALTER PROCEDURE bronze.load_bronze AS
 BEGIN
+    PRINT '============================================'
+    PRINT 'Loading Bronze Layer'
+    PRINT '============================================'
+
+    PRINT '--------------------------------------------'
+    PRINT '>> Loading CRM Tables'
+    PRINT '--------------------------------------------'
+
     TRUNCATE TABLE bronze.crm_cust_info;
     BULK INSERT bronze.crm_cust_info
     FROM 'D:\Marouane\Documents\github\sql-data-warehouse\datasets\source_crm\cust_info.csv'
@@ -26,6 +34,10 @@ BEGIN
         FIELDTERMINATOR = ',',
         TABLOCK
     );
+
+    PRINT '--------------------------------------------'
+    PRINT '>> Loading ERP Tables'
+    PRINT '--------------------------------------------'
 
     TRUNCATE TABLE bronze.erp_cust_az12;
     BULK INSERT bronze.erp_cust_az12
