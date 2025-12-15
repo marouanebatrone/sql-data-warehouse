@@ -1,4 +1,7 @@
 -- silver.crm_cust_info
+PRINT '>>TURNCATING silver.crm_cust_info'
+TRUNCATE TABLE silver.crm_cust_info;
+PRINT '>>INSERTING DATA TO silver.crm_cust_info'
 INSERT INTO silver.crm_cust_info ( 
     cst_id, 
     cst_key, 
@@ -35,7 +38,9 @@ WHERE flag_last = 1
 
 
 
-
+PRINT '>>TURNCATING silver.crm_prd_info'
+TRUNCATE TABLE silver.crm_prd_info;
+PRINT '>>INSERTING DATA TO silver.crm_prd_info'
 -- silver.crm_prd_info
 INSERT silver.crm_prd_info (
 	prd_id,
@@ -66,7 +71,11 @@ FROM bronze.crm_prd_info;
 
 
 
--- sales_details
+-- silver.crm_sales_details
+PRINT '>>TURNCATING silver.crm_sales_details'
+TRUNCATE TABLE silver.crm_sales_details;
+PRINT '>>INSERTING DATA TO silver.crm_sales_details'
+
 INSERT INTO silver.crm_sales_details (
 	sls_ord_num,
 	sls_prd_key,
@@ -102,3 +111,52 @@ FROM bronze.crm_sales_details
 
 
 
+-- silver.erp_cust_az12
+PRINT '>>TURNCATING silver.erp_cust_az12'
+TRUNCATE TABLE silver.erp_cust_az12;
+PRINT '>>INSERTING DATA TO silver.erp_cust_az12'
+
+INSERT INTO silver.erp_cust_az12 (CID, BDATE, GEN)
+SELECT
+CASE WHEN CID LIKE 'NAS%' THEN SUBSTRING(CID, 4, LEN(CID)) 
+	 ELSE CID
+END AS CID,
+CASE WHEN BDATE > GETDATE() THEN NULL
+	 ELSE BDATE
+END AS BDATE,
+CASE 
+	 WHEN UPPER(TRIM(GEN)) IN ('F', 'FEMALE') THEN 'Female'
+	 WHEN UPPER(TRIM(GEN)) IN ('M', 'MALE') THEN  'Male'
+	ELSE 'n/a'
+END AS GEN
+FROM bronze.erp_cust_az12
+
+
+-- silver.erp_loc_a101
+PRINT '>>TURNCATING silver.erp_loc_a101'
+TRUNCATE TABLE silver.erp_loc_a101;
+PRINT '>>INSERTING DATA TO silver.erp_loc_a101'
+
+INSERT INTO silver.erp_loc_a101(CID, CNTRY)
+SELECT 
+REPLACE(CID, '-', '') AS CID,
+CASE 
+	WHEN TRIM(CNTRY) = 'US' OR TRIM(CNTRY) = 'USA' THEN 'United States'
+	WHEN TRIM(CNTRY) = 'DE' THEN 'Gemany'
+	WHEN TRIM(CNTRY) = '' OR CNTRY IS NULL THEN 'n/a'
+	ELSE TRIM(CNTRY) END AS CNTRY
+FROM bronze.erp_loc_a101;
+
+
+-- silver.erp_px_cat_g1v2
+PRINT '>>TURNCATING silver.erp_px_cat_g1v2'
+TRUNCATE TABLE silver.erp_px_cat_g1v2;
+PRINT '>>INSERTING DATA TO silver.erp_px_cat_g1v2'
+
+INSERT INTO silver.erp_px_cat_g1v2 (ID, CAT, SUBCAT, MAINTENANCE)
+SELECT 
+ID, 
+CAT, 
+SUBCAT, 
+MAINTENANCE  
+FROM bronze.erp_px_cat_g1v2;

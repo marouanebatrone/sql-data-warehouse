@@ -85,5 +85,3 @@ IF OBJECT_ID ('silver.erp_px_cat_g1v2', 'U') IS NOT NULL
 	MAINTENANCE NVARCHAR(50),
 	dwh_create_date DATETIME2 DEFAULT GETDATE() 
 )
-
-
