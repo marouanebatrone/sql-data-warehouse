@@ -1,8 +1,17 @@
+/*
+Purpose of the script:
+This stored procedure loads data from bronze schema to silver schema.
+It performs data cleansing and transformation before the load process.
+
+Usage Example: 
+EXEC silver.load_silver;
+*/
+
 CREATE OR ALTER PROCEDURE silver.load_silver AS
 BEGIN
     DECLARE @start_time DATETIME, @end_time DATETIME, @silver_s_time DATETIME, @silver_e_time DATETIME;
     SET @silver_s_time = GETDATE();
-    TRY
+    BEGIN TRY
         SET @start_time = GETDATE();
         -- silver.crm_cust_info
         PRINT '>>TURNCATING silver.crm_cust_info'
@@ -184,7 +193,7 @@ BEGIN
         PRINT '--------------------------------------------------------------------------'
     END TRY
 
-    CATCH
+    BEGIN CATCH
         PRINT '==============================='
         PRINT 'ERROR OCCURED DURING LOADING SILVER LAYER'
         PRINT 'ERROR Message: ' + ERROR_MESSAGE();
