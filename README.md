@@ -3,6 +3,6 @@ Building a data warehouse with SQL server, including ETL processes, data modelin
 
 ![Project architecture](projet-arch.png)
 
-The data flow of our medallion architecture:
+The data flow diagram of our medallion architecture:
 
 ![Project architecture](data_flow.png)
